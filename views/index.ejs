@@ -2,4 +2,5 @@
 	<h2>Welcome! Please log in.</h2>
 <% } else { %>
 	<h2>Hello, <%= user.name %>.</h2>
+  <img src="http://www.gravatar.com/avatar/<%= user.gravatar %>" />
 <% } %>
