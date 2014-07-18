@@ -1,8 +1,11 @@
+var http = require('http');
+
 var async = require('async');
 var express = require('express');
 var passport = require('passport');
 var flash = require('connect-flash');
 var GitHubStrategy = require('passport-github').Strategy
+var JSONStream = require('JSONStream');
 
 var config = require('./config');
 var db = require('./lib/db');
@@ -154,7 +157,7 @@ app.get('/logout', function(req, res){
 });
 
 
-var server;
+var server, webhookServer;
 
 function main() {
   async.series([
@@ -165,7 +168,23 @@ function main() {
         console.log('listening on port 80');
         callback();
       });
-    }
+    },
+
+    function createWebhookServer(callback) {
+      webhookServer = http.createServer(function(req, res) {
+        var jsonStream = JSONStream.parse(true);
+
+        req.pipe(jsonStream);
+
+        jsonStream.on('data', function(obj) {
+          console.log(JSON.stringify(obj, null, 4));
+        });
+
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('okay');
+      });
+      webhookServer.listen(8484, '162.242.217.236', callback);
+    },
   ], function(err) {
     if (err) {
       console.error('Some error starting up.');
