@@ -4,5 +4,10 @@
     "clientSecret": "secret-client-secret",
     "authCallbackUri": "http://example.com/auth/github/callback"
   },
-  "sessionSecret": "secret change me"
+  "sessionSecret": "secret change me",
+  "rax": {
+    "tenant": "123456",
+    "user": "raxUser",
+    "apiKey": "raxApiKey"
+  }
 }
