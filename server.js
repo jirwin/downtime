@@ -3,6 +3,8 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var GitHubStrategy = require('passport-github').Strategy
 
+var config = require('./config');
+
 var app = express();
 
 app.configure(function() {
@@ -10,7 +12,7 @@ app.configure(function() {
   app.set('view engine', 'ejs');
   app.use(express.cookieParser());
   app.use(express.bodyParser());
-  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(express.session({ secret: config.sessionSecret }));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);
@@ -27,9 +29,9 @@ passport.deserializeUser(function(obj, done) {
 });
 
 passport.use(new GitHubStrategy({
-    clientID: '06a51ae9579066cf2e49',
-    clientSecret: '6d37ea6a4855611af2ba228f4f6cf7b871393a62',
-    callbackURL: "http://peenbin.mirwin.net:3000/auth/github/callback"
+    clientID: config.github.clientId,
+    clientSecret: config.github.clientSecret,
+    callbackURL: config.github.authCallbackUri
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
@@ -67,6 +69,6 @@ app.get('/logout', function(req, res){
 });
 
 
-var server = app.listen(3000, function() {
+var server = app.listen(80, function() {
   console.log('listening');
 });

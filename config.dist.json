@@ -1,0 +1,8 @@
+{
+  "github": {
+    "clientId": "secret-client-id",
+    "clientSecret": "secret-client-secret",
+    "authCallbackUri": "http://example.com/auth/github/callback"
+  },
+  "sessionSecret": "secret change me"
+}
