@@ -1,9 +1,11 @@
+var async = require('async');
 var express = require('express');
 var passport = require('passport');
 var flash = require('connect-flash');
 var GitHubStrategy = require('passport-github').Strategy
 
 var config = require('./config');
+var db = require('./lib/db');
 
 var app = express();
 
@@ -21,11 +23,18 @@ app.configure(function() {
 });
 
 passport.serializeUser(function(user, done) {
-  done(null, user);
+  done(null, user.email);
 });
 
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
+passport.deserializeUser(function(email, done) {
+  db.getUser(email, function(err, user) {
+    if (err) {
+      console.log('no user found for', email);
+      done();
+      return;
+    }
+    done(null, user);
+  });
 });
 
 passport.use(new GitHubStrategy({
@@ -34,13 +43,14 @@ passport.use(new GitHubStrategy({
     callbackURL: config.github.authCallbackUri
   },
   function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
-    process.nextTick(function () {
-      // To keep the example simple, the user's GitHub profile is returned to
-      // represent the logged-in user.  In a typical application, you would want
-      // to associate the GitHub account with a user record in your database,
-      // and return that user instead.
-      return done(null, profile);
+    var params = {
+      name: profile._json.name,
+      email: profile._json.email,
+      githubId: profile.id,
+      gravatar: profile._json.gravatar_id
+    }
+    db.findAndUpdateUser(profile._json.email, params, function(err, user) {
+      return done(err, user);
     });
   }
 ));
@@ -69,6 +79,25 @@ app.get('/logout', function(req, res){
 });
 
 
-var server = app.listen(80, function() {
-  console.log('listening');
-});
+var server;
+
+function main() {
+  async.series([
+    db.initialize.bind(null),
+
+    function startExpress(callback) {
+      server = app.listen(80, function() {
+        console.log('listening on port 80');
+        callback();
+      });
+    }
+  ], function(err) {
+    if (err) {
+      console.error('Some error starting up.');
+    }
+
+    console.log('Successfully started.');
+  });
+}
+
+main();
