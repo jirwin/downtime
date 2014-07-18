@@ -6,6 +6,7 @@ var GitHubStrategy = require('passport-github').Strategy
 
 var config = require('./config');
 var db = require('./lib/db');
+var mc = require('./lib/monitoring').getMonitoringClient();
 
 var app = express();
 
@@ -50,13 +51,32 @@ passport.use(new GitHubStrategy({
       gravatar: profile._json.gravatar_id
     }
     db.findAndUpdateUser(profile._json.email, params, function(err, user) {
+      if (!user.entityId) {
+        mc.createEntity(user.githubId, user.email, function(err, enId) {
+          if (err) {
+            done(null, user);
+            return;
+          }
+
+          user.entityId = enId;
+          user.save(function(err, newUser, num) {
+            if (err) {
+              done(err);
+              return;
+            }
+
+            done(err, newUser);
+          });
+        });
+        return;
+      }
+
       return done(err, user);
     });
   }
 ));
 
 app.get('/', function(req, res) {
-  console.dir(req.user);
   res.render('index', {user: req.user});
 });
 
@@ -64,8 +84,63 @@ app.get('/login', function(req, res) {
   res.render('login', {user: req.user});
 });
 
+app.get('/create', function(req, res) {
+  if (!req.user) {
+    res.redirect('/login');
+    return;
+  }
+
+  res.render('createCheck', {user: req.user});
+});
+
+app.post('/createCheck', function(req, res) {
+  var body = req.body,
+      target;
+
+  if (!req.user) {
+    res.redirect('/login');
+    return;
+  }
+
+  if (!body['check-target']) {
+    res.redirect('/create');
+    return;
+  }
+
+  target = body['check-target'];
+
+  async.auto({
+    user: function getUser(callback) {
+      db.getUser(req.user.email, callback);
+    },
+
+    check: function createCheck(callback) {
+      mc.createHttpCheck(req.user.entityId, target, target, callback);
+    },
+
+    alarm: ['check', function createAlarm(callback, results) {
+      var chId = results.check;
+      mc.createHttpAlarm(req.user.entityId, chId, callback);
+    }]
+  }, function(err, results) {
+    var user = results.user,
+        check = {
+          id: results.check,
+          label: target,
+          url: target,
+          alarmId: results.alarm
+        };
+
+    user.checks.push(check);
+    user.save(function(err, newUser, num) {
+      res.redirect('/create');
+    });
+  });
+});
+
 app.get('/auth/github', passport.authenticate('github'), function(req, res){
 });
+
 
 app.get('/auth/github/callback',
         passport.authenticate('github', { failureRedirect: '/login' }),
