@@ -9,6 +9,11 @@
     "tenant": "123456",
     "user": "raxUser",
     "apiKey": "raxApiKey",
-    "notificationPlan": "npId"
+    "notificationPlan": "npId",
+  },
+  "webhook": {
+    "host": "127.0.0.1",
+    "port": 8484,
+    "token": "webhookToken"
   }
 }

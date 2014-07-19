@@ -10,6 +10,7 @@ var JSONStream = require('JSONStream');
 var config = require('./config');
 var db = require('./lib/db');
 var mc = require('./lib/monitoring').getMonitoringClient();
+var WebhookServer = require('./lib/webhookServer');
 
 var app = express();
 
@@ -171,19 +172,8 @@ function main() {
     },
 
     function createWebhookServer(callback) {
-      webhookServer = http.createServer(function(req, res) {
-        var jsonStream = JSONStream.parse(true);
-
-        req.pipe(jsonStream);
-
-        jsonStream.on('data', function(obj) {
-          console.log(JSON.stringify(obj, null, 4));
-        });
-
-        res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.end('okay');
-      });
-      webhookServer.listen(8484, '162.242.217.236', callback);
+      webhookServer = new WebhookServer(config.webhook.port, config.webhook.host);
+      webhookServer.listen(callback);
     },
   ], function(err) {
     if (err) {
