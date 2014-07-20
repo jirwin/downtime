@@ -6,6 +6,37 @@ html
   body
     include header
 
+    if flash
+      div.container
+        if flash.error
+          - for (var ii = 0; ii < flash.error.length; ii++)
+            div.alert.alert-dismissable.alert-danger(role="alert")
+              button.close(type="button" data-dismiss="alert")
+                span(aria-hidden="true") &times;
+              strong Oh no! 
+              = flash.error[ii]
+        if flash.warning
+          - for (var ii = 0; ii < flash.warning.length; ii++)
+            div.alert.alert-dismissable.alert-warning(role="alert")
+              button.close(type="button" data-dismiss="alert")
+                span(aria-hidden="true") &times;
+              strong Be careful! 
+              = flash.warning[ii]
+        if flash.info
+          - for (var ii = 0; ii < flash.info.length; ii++)
+            div.alert.alert-dismissable.alert-info(role="alert")
+              button.close(type="button" data-dismiss="alert")
+                span(aria-hidden="true") &times;
+              strong Hey! Listen! 
+              = flash.info[ii]
+        if flash.success
+          - for (var ii = 0; ii < flash.success.length; ii++)
+            div.alert.alert-dismissable.alert-success(role="alert")
+              button.close(type="button" data-dismiss="alert")
+                span(aria-hidden="true") &times;
+              strong We did it! 
+              = flash.success[ii]
+
     block content
 
     include footer
