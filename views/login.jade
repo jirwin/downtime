@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  div.container
+    form.form-signin(action='/auth/github' method='get')
+      h2.form-signin-heading Please sign in
+      button.btn.btn-large.btn-primary(type='submit') Sign in with Github

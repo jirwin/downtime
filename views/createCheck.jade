@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  div.container
+    div.jumbotron(style="text-align: center;background-color: transparent")
+      h1 Let's monitor things!
+      p.lead Monitoring a website is simple! Just enter a URL below and click the button.
+      p
+        form(action="/createCheck" method="post")
+          div.row
+            div.input-group.input-group-lg
+              input.form-control(type="text" placeholder="URL to monitor" name="check-target")
+              span.input-group-btn
+                input.btn.btn-success(type="submit" value="Tell me when things are broke!")

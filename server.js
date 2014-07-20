@@ -16,14 +16,14 @@ var app = express();
 
 app.configure(function() {
   app.set('views', __dirname + '/views');
-  app.set('view engine', 'ejs');
+  app.set('view engine', 'jade');
   app.use(express.cookieParser());
   app.use(express.bodyParser());
   app.use(express.session({ secret: config.sessionSecret }));
+  app.use('/static', express.static(__dirname + '/public'));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);
-  app.use(express.static('public'));
   app.use(flash());
 });
 
