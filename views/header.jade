@@ -5,11 +5,12 @@ div.navbar.navbar-inverse.navbar-static-top(role='navigation')
       span.icon-bar
       span.icon-bar
       span.icon-bar
-    a.navbar-brand(href="#") Downtime
+    a.navbar-brand(href="/") Downtime
     div.collapse.navbar-collapse
       ul.nav.navbar-nav
-        li.active
-          a(href="#") Home
+        if user
+          li
+            a(href="/create") Monitor a Website
         li
           a(href="#about") About
       ul.nav.navbar-nav.navbar-right
