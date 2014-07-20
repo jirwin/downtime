@@ -15,5 +15,9 @@
     "host": "127.0.0.1",
     "port": 8484,
     "token": "webhookToken"
+  },
+  "mailgun": {
+    "apiKey": "mailgunApiKey",
+    "domain": "mail.example.com"
   }
 }
