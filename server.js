@@ -5,6 +5,7 @@ var express = require('express');
 var passport = require('passport');
 var flash = require('connect-flash');
 var GitHubStrategy = require('passport-github').Strategy
+var MongoStore = require('connect-mongo')(express);
 
 var config = require('./config');
 var db = require('./lib/db');
@@ -19,7 +20,12 @@ app.configure(function() {
   app.set('view engine', 'jade');
   app.use(express.cookieParser());
   app.use(express.bodyParser());
-  app.use(express.session({ secret: config.sessionSecret }));
+  app.use(express.session({
+      secret: config.sessionSecret,
+      store: new MongoStore({
+        db: config.mongo.db
+      })
+    }));
   app.use('/static', express.static(__dirname + '/public'));
   app.use(passport.initialize());
   app.use(passport.session());
