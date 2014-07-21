@@ -11,6 +11,10 @@
     "apiKey": "raxApiKey",
     "notificationPlan": "npId",
   },
+  "webserver": {
+    "host": "127.0.0.1",
+    "port": 3000
+  },
   "webhook": {
     "host": "127.0.0.1",
     "port": 8484,

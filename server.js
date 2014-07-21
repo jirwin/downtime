@@ -26,6 +26,7 @@ app.configure(function() {
         db: config.mongo.db
       })
     }));
+  app.use(express.csrf());
   app.use('/static', express.static(__dirname + '/public'));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -114,8 +115,8 @@ function main() {
     db.initialize.bind(null),
 
     function startExpress(callback) {
-      server = app.listen(80, function() {
-        console.log('listening on port 80');
+      server = app.listen(config.webserver.port, function() {
+        console.log('listening on port ' + config.webserver.port);
         callback();
       });
     },

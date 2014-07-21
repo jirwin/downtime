@@ -7,6 +7,7 @@ block content
       p.lead Monitoring a website is simple! Just enter a URL below and click the button.
       p
         form(action="/createCheck" method="post")
+          input(type="hidden" name="_csrf" value=_csrf)
           div.row
             div.input-group.input-group-lg
               input.form-control(type="text" placeholder="URL to monitor" name="check-target")
