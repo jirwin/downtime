@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  div#dashboard.container
+    if checks.length === 0
+      h1.text-center No checks configured
+    else
+      - for (var checkId in checks)
+        case checks[checkId].state
+          when "OK"
+            div.row.dt-monitor.bg-success
+              h2
+                = checks[checkId].url
+          when "WARNING"
+            div.row.dt-monitor.bg-warning
+              h2
+                = checks[checkId].url
+          when "CRITICAL"
+            div.row.dt-monitor.bg-danger
+              h2
+                = checks[checkId].url
+          default
+            div.row.dt-monitor
+              h2
+                = checks[checkId].url
+

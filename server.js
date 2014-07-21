@@ -93,6 +93,8 @@ app.get('/login', handlers.login);
 
 app.get('/create', handlers.create);
 
+app.get('/dashboard', handlers.dashboard);
+
 app.post('/createCheck', handlers.createCheck);
 
 app.get('/auth/github', passport.authenticate('github'), function(req, res){

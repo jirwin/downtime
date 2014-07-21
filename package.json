@@ -22,6 +22,7 @@
     "JSONStream": "~0.8.4",
     "jade": "~1.4.2",
     "mailgun-js": "~0.5.1",
-    "connect-mongo": "~0.4.1"
+    "connect-mongo": "~0.4.1",
+    "underscore": "~1.6.0"
   }
 }
