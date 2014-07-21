@@ -16,10 +16,6 @@ var handlers = require('./lib/handlers');
 
 var app = express();
 
-form.configure({
-  flashErrors: false
-});
-
 app.configure(function() {
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -102,9 +98,15 @@ app.get('/dashboard', handlers.dashboard);
 
 app.post('/createCheck',
          form(
-           form.field('target').isUrl().required()
+           form.field('target').isUrl('You must enter a valid URL to monitor.').required()
          ),
          handlers.createCheck);
+
+app.post('/removeCheck',
+         form(
+           form.field('check').isAlphanumeric().required()
+         ),
+         handlers.removeCheck);
 
 app.get('/auth/github', passport.authenticate('github'), function(req, res){
 });

@@ -2,25 +2,45 @@ extends layout
 
 block content
   div#dashboard.container
-    if checks.length === 0
-      h1.text-center No checks configured
-    else
-      - for (var checkId in checks)
-        case checks[checkId].state
-          when "OK"
-            div.row.dt-monitor.bg-success
-              h2
+    - for (var checkId in checks)
+      case checks[checkId].state
+        when "OK"
+          div.row.dt-monitor.bg-success
+            h2
+              a(href=checks[checkId].url)
                 = checks[checkId].url
-          when "WARNING"
-            div.row.dt-monitor.bg-warning
-              h2
+              form(action="/removeCheck" method="post")
+                input(type="hidden" name="_csrf" value=_csrf)
+                input(type="hidden" value=checkId name="check")
+                button.close(type="submit")
+                  span(aria-hidden="true") &times;
+        when "WARNING"
+          div.row.dt-monitor.bg-warning
+            h2
+              a(href=checks[checkId].url)
                 = checks[checkId].url
-          when "CRITICAL"
-            div.row.dt-monitor.bg-danger
-              h2
+              form(action="/removeCheck" method="post")
+                input(type="hidden" name="_csrf" value=_csrf)
+                input(type="hidden" value=checkId name="check")
+                button.close(type="submit")
+                  span(aria-hidden="true") &times;
+        when "CRITICAL"
+          div.row.dt-monitor.bg-danger
+            h2
+              a(href=checks[checkId].url)
                 = checks[checkId].url
-          default
-            div.row.dt-monitor
-              h2
+              form(action="/removeCheck" method="post")
+                input(type="hidden" name="_csrf" value=_csrf)
+                input(type="hidden" value=checkId name="check")
+                button.close(type="submit")
+                  span(aria-hidden="true") &times;
+        default
+          div.row.dt-monitor.bg-info
+            h2
+              a(href=checks[checkId].url)
                 = checks[checkId].url
-
+              form(action="/removeCheck" method="post")
+                input(type="hidden" name="_csrf" value=_csrf)
+                input(type="hidden" value=checkId name="check")
+                button.close(type="submit")
+                  span(aria-hidden="true") &times;
