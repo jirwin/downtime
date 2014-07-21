@@ -6,6 +6,7 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var GitHubStrategy = require('passport-github').Strategy
 var MongoStore = require('connect-mongo')(express);
+var form = require('express-form');
 
 var config = require('./config');
 var db = require('./lib/db');
@@ -14,6 +15,10 @@ var WebhookServer = require('./lib/webhookServer');
 var handlers = require('./lib/handlers');
 
 var app = express();
+
+form.configure({
+  flashErrors: false
+});
 
 app.configure(function() {
   app.set('views', __dirname + '/views');
@@ -95,7 +100,11 @@ app.get('/create', handlers.create);
 
 app.get('/dashboard', handlers.dashboard);
 
-app.post('/createCheck', handlers.createCheck);
+app.post('/createCheck',
+         form(
+           form.field('target').isUrl().required()
+         ),
+         handlers.createCheck);
 
 app.get('/auth/github', passport.authenticate('github'), function(req, res){
 });

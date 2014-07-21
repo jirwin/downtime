@@ -10,6 +10,6 @@ block content
           input(type="hidden" name="_csrf" value=_csrf)
           div.row
             div.input-group.input-group-lg
-              input.form-control(type="text" placeholder="URL to monitor" name="check-target")
+              input.form-control(type="text" placeholder="URL to monitor" name="target" value=target||'')
               span.input-group-btn
                 input.btn.btn-success(type="submit" value="Tell me when things are broke!")

@@ -23,6 +23,7 @@
     "jade": "~1.4.2",
     "mailgun-js": "~0.5.1",
     "connect-mongo": "~0.4.1",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "express-form": "~0.12.2"
   }
 }
