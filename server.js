@@ -63,7 +63,12 @@ passport.use(new GitHubStrategy({
       gravatar: profile._json.gravatar_id
     }
     db.findAndUpdateUser(profile._json.email, params, function(err, user) {
-      if (!user.entityId) {
+      if (err) {
+        done(err);
+        return;
+      }
+
+      if (user && !user.entityId) {
         mc.createEntity(user.githubId, user.email, function(err, enId) {
           if (err) {
             done(null, user);
