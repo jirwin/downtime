@@ -98,7 +98,7 @@ app.get('/dashboard', handlers.dashboard);
 
 app.post('/createCheck',
          form(
-           form.field('target').isUrl('You must enter a valid URL to monitor.').required()
+           form.field('target').isUrl('You must enter a valid URL to monitor.').regex('^https?://', 'Only HTTP and HTTPS URLs are supported.').required()
          ),
          handlers.createCheck);
 
